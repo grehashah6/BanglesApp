@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdProducts Product[] @relation("ProductCreator")
+  productHistory  ProductHistory[]
+}
+
+model Product {
+  id         String   @id @default(cuid())
+  name       String
+  photoUrl   String?
+  currentStep Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  createdBy  String
+  createdByUser User   @relation("ProductCreator", fields: [createdBy], references: [id])
+
+  history ProductHistory[]
+
+  @@index([currentStep])
+  @@index([name])
+}
+
+model Step {
+  id          Int      @id @default(autoincrement())
+  stepNumber  Int      @unique
+  stepName    String
+  description String?
+  order       Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model ProductHistory {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  stepNumber Int
+  updatedBy  String
+  updatedByUser User   @relation(fields: [updatedBy], references: [id])
+  notes      String?
+  updatedAt  DateTime @default(now())
+
+  @@index([productId])
+  @@index([updatedAt])
+}
+
