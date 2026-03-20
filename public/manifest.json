@@ -1,0 +1,10 @@
+{
+  "name": "BangleTracker",
+  "short_name": "BangleTracker",
+  "description": "Track bangle products through manufacturing steps",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary"
+}

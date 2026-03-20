@@ -13,8 +13,13 @@ export default withAuth(
       return NextResponse.redirect(new URL("/dashboard", req.url))
     }
 
-    // Protect admin routes
-    if (req.nextUrl.pathname.startsWith("/admin") && !isAdmin) {
+    // Protect admin-only routes
+    if (
+      (req.nextUrl.pathname.startsWith("/admin") ||
+        req.nextUrl.pathname.startsWith("/users") ||
+        req.nextUrl.pathname.startsWith("/activity")) &&
+      !isAdmin
+    ) {
       return NextResponse.redirect(new URL("/dashboard", req.url))
     }
 
@@ -33,6 +38,15 @@ export default withAuth(
 )
 
 export const config = {
-  matcher: ["/admin/:path*", "/user/:path*", "/dashboard/:path*", "/login"],
+  matcher: [
+    "/admin/:path*",
+    "/user/:path*",
+    "/dashboard/:path*",
+    "/orders/:path*",
+    "/products/:path*",
+    "/users/:path*",
+    "/activity/:path*",
+    "/steps/:path*",
+  ],
 }
 

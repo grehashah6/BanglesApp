@@ -6,8 +6,9 @@ import { z } from "zod"
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
+  size: z.string().min(1, "Size is required"),
   photoUrl: z.string().optional(),
-  currentStep: z.number().int().min(1).max(7).default(1),
+  currentStep: z.number().int().min(1).max(11).default(1),
 })
 
 export async function GET(request: NextRequest) {
@@ -20,22 +21,28 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("search") || ""
     const step = searchParams.get("step")
+    const includeArchived = searchParams.get("archived") === "true"
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "50")
     const skip = (page - 1) * limit
 
     const where: any = {}
-    
+    if (!includeArchived) {
+      where.archived = false
+    }
     if (search) {
       where.name = {
         contains: search,
         mode: "insensitive" as const,
       }
     }
-
     if (step) {
       where.currentStep = parseInt(step)
     }
+
+    // Products should be order-linked only. This keeps the UI order-centric:
+    // users create sizes via Orders, and those appear in Products.
+    where.orderId = { not: null }
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
@@ -48,6 +55,12 @@ export async function GET(request: NextRequest) {
             select: {
               name: true,
               email: true,
+            },
+          },
+          order: {
+            select: {
+              id: true,
+              name: true,
             },
           },
         },
@@ -98,7 +111,6 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Create history entry
     await prisma.productHistory.create({
       data: {
         productId: product.id,
@@ -107,6 +119,15 @@ export async function POST(request: NextRequest) {
         notes: "Product created",
       },
     })
+
+    const { logActivity } = await import("@/lib/activity")
+    await logActivity(
+      session.user.id,
+      "create",
+      "Product",
+      product.id,
+      product.name
+    )
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {

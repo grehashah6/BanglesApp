@@ -19,6 +19,10 @@ async function main() {
     process.exit(1)
   }
 
+  const normalizedEmail = String(email).toLowerCase()
+  const effectiveRole =
+    normalizedEmail === "admin@example.com" ? "ADMIN" : role
+
   const hashedPassword = await bcrypt.hash(password, 10)
 
   try {
@@ -26,7 +30,7 @@ async function main() {
       data: {
         email,
         password: hashedPassword,
-        role: role as UserRole,
+        role: effectiveRole as UserRole,
         name: name || undefined,
       },
     })

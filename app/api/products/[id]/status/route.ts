@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
 const updateStatusSchema = z.object({
-  stepNumber: z.number().int().min(1).max(7),
+  stepNumber: z.number().int().min(1).max(11),
   notes: z.string().optional(),
 })
 
@@ -59,7 +59,6 @@ export async function PUT(
       },
     })
 
-    // Create history entry
     await prisma.productHistory.create({
       data: {
         productId: product.id,
@@ -68,6 +67,15 @@ export async function PUT(
         notes: notes || `Moved to step ${stepNumber}: ${step.stepName}`,
       },
     })
+
+    const { logActivity } = await import("@/lib/activity")
+    await logActivity(
+      session.user.id,
+      "advance_step",
+      "Product",
+      product.id,
+      `${product.name} → step ${stepNumber}`
+    )
 
     return NextResponse.json(updatedProduct)
   } catch (error) {

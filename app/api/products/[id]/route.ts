@@ -6,8 +6,10 @@ import { z } from "zod"
 
 const updateProductSchema = z.object({
   name: z.string().min(1).optional(),
+  size: z.string().min(1).optional(),
   photoUrl: z.string().optional(),
-  currentStep: z.number().int().min(1).max(7).optional(),
+  currentStep: z.number().int().min(1).max(11).optional(),
+  archived: z.boolean().optional(),
 })
 
 export async function GET(
@@ -147,6 +149,15 @@ export async function DELETE(
       )
     }
 
+    const { logActivity } = await import("@/lib/activity")
+    await logActivity(
+      session.user.id,
+      "delete",
+      "Product",
+      params.id,
+      product.name
+    )
+
     await prisma.product.delete({
       where: { id: params.id },
     })
@@ -156,6 +167,55 @@ export async function DELETE(
     console.error("Error deleting product:", error)
     return NextResponse.json(
       { error: "Failed to delete product" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id: params.id },
+    })
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+    }
+
+    const body = await request.json()
+    if (body.archived !== true && body.archived !== false) {
+      return NextResponse.json(
+        { error: "archived boolean required" },
+        { status: 400 }
+      )
+    }
+
+    await prisma.product.update({
+      where: { id: params.id },
+      data: { archived: body.archived },
+    })
+
+    const { logActivity } = await import("@/lib/activity")
+    await logActivity(
+      session.user.id,
+      body.archived ? "archive" : "unarchive",
+      "Product",
+      product.id,
+      product.name
+    )
+
+    return NextResponse.json({ message: "Product updated" })
+  } catch (error) {
+    console.error("Error archiving product:", error)
+    return NextResponse.json(
+      { error: "Failed to update product" },
       { status: 500 }
     )
   }
