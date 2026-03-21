@@ -7,12 +7,12 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
 
   const cycle = () => {
-    if (theme === "light") setTheme("dark")
-    else if (theme === "dark") setTheme("system")
-    else setTheme("light")
+    // Only toggle between light + dark (no "system" option in the UI).
+    setTheme(theme === "dark" ? "light" : "dark")
   }
 
-  const label = theme === "light" ? "Light" : theme === "dark" ? "Dark" : "System"
+  const label = theme === "dark" ? "Dark" : "Light"
+  const nextLabel = theme === "dark" ? "Light" : "Dark"
 
   return (
     <Button
@@ -21,11 +21,10 @@ export function ThemeToggle() {
       onClick={cycle}
       className="text-muted-foreground"
       title="Theme"
-      aria-label={`Theme: ${label}. Click to switch.`}
+      aria-label={`Theme: ${label}. Click to switch to ${nextLabel}.`}
     >
-      {theme === "light" && "☀️"}
-      {theme === "dark" && "🌙"}
-      {theme === "system" && "💻"}
+      {label === "Light" && "☀️"}
+      {label === "Dark" && "🌙"}
       <span className="sr-only">{label}</span>
     </Button>
   )
