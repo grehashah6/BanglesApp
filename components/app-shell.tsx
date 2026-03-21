@@ -32,9 +32,38 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession()
+  const pathname = usePathname()
+  const { data: session, status } = useSession()
   const isAdmin = session?.user?.role === "ADMIN"
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const isLoginPage = pathname === "/login"
+
+  // Login: no Orders/Products nav — only content + theme (best UX for sign-in)
+  if (isLoginPage) {
+    return (
+      <div className="min-h-screen bg-background relative">
+        <div className="fixed right-4 top-4 z-50">
+          <ThemeToggle />
+        </div>
+        {children}
+      </div>
+    )
+  }
+
+  // Waiting for session on protected routes (avoids flashing full nav)
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-2 px-4">
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      </div>
+    )
+  }
+
+  // Not signed in (edge case if middleware didn’t run) — no app nav
+  if (status !== "authenticated" || !session) {
+    return <div className="min-h-screen bg-background">{children}</div>
+  }
 
   return (
     <div className="min-h-screen bg-background">

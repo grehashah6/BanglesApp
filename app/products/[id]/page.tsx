@@ -5,9 +5,11 @@ import { authOptions } from "@/lib/auth"
 import { AdvanceStepForm } from "@/components/advance-step-form"
 import { ProductActions } from "@/components/product-actions"
 import { ProductComments } from "@/components/product-comments"
+import { ImagePreviewDialog } from "@/components/image-preview-dialog"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 const TOTAL_STEPS = 11
 
@@ -26,6 +28,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
     include: {
       createdByUser: {
         select: { name: true, email: true },
+      },
+      order: {
+        select: { id: true, name: true },
       },
       history: {
         orderBy: { updatedAt: "desc" },
@@ -48,12 +53,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <Link href="/products" className="text-sm text-muted-foreground hover:underline">
             ← Back to products
           </Link>
-          <h1 className="text-3xl font-semibold tracking-tight">{product.name}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{product.name}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <Badge variant="secondary">Size {product.size}</Badge>
             {product.archived && (
@@ -68,8 +73,27 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </span>
             </span>
           </div>
+          <div className="pt-1">
+            {product.order ? (
+              <Card className="border-dashed bg-muted/30">
+                <CardContent className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground">Part of order</p>
+                    <p className="text-sm font-medium">{product.order.name}</p>
+                  </div>
+                  <Button asChild variant="outline" size="sm" className="w-full shrink-0 sm:w-auto">
+                    <Link href={`/orders/${product.order.id}`}>View order</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Not linked to an order (legacy or manual entry).
+              </p>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {isAdmin && (
             <ProductActions
               productId={product.id}
@@ -86,12 +110,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="grid gap-6 md:grid-cols-[2fr,1fr]">
         <div className="space-y-6">
           {product.photoUrl && (
-            <Card className="overflow-hidden">
-              <img
-                src={product.photoUrl}
-                alt={product.name}
-                className="w-full object-cover max-h-96"
-              />
+            <Card>
+              <CardContent className="p-3 sm:p-4">
+                <ImagePreviewDialog
+                  src={product.photoUrl}
+                  alt={product.name}
+                  title={`${product.name} — photo`}
+                  className="aspect-video w-full max-h-96"
+                  imgClassName="object-cover"
+                  showHint
+                />
+              </CardContent>
             </Card>
           )}
 

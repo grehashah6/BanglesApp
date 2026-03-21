@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ImagePreviewDialog } from "@/components/image-preview-dialog"
 
 const TOTAL_STEPS = 11
 
@@ -300,17 +301,19 @@ export default function OrderDetailPage() {
                                 className="rounded border-input"
                               />
                             )}
-                            <div className="h-10 w-10 rounded-md border bg-muted overflow-hidden flex items-center justify-center">
-                              {s.photoUrl ? (
-                                <img
-                                  src={s.photoUrl}
-                                  alt={s.size}
-                                  className="h-10 w-10 object-cover"
-                                />
-                              ) : (
+                            {s.photoUrl ? (
+                              <ImagePreviewDialog
+                                src={s.photoUrl}
+                                alt={`${it.designName} · size ${s.size}`}
+                                title={`${it.designName} — size ${s.size}`}
+                                className="h-10 w-10 shrink-0"
+                                imgClassName="object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border bg-muted">
                                 <span className="text-xs text-muted-foreground">—</span>
-                              )}
-                            </div>
+                              </div>
+                            )}
                             <div className="min-w-0">
                               <div className="text-sm font-medium">Size {s.size}</div>
                               <div className="text-xs text-muted-foreground">

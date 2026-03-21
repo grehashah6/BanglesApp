@@ -1,1 +1,22 @@
+# Dependencies
 node_modules
+
+# Next.js
+.next/
+out/
+
+# Env (secrets — never commit)
+.env
+.env*.local
+
+# Uploads (user content)
+public/uploads/
+
+# Debug / OS
+.DS_Store
+*.log
+npm-debug.log*
+
+# IDE
+.idea
+.vscode
