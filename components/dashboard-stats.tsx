@@ -118,7 +118,6 @@ export function DashboardStats() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {stats.productsPerStep.map((s) => {
-              const pct = Math.max(8, Math.round((s.count / maxCount) * 100))
               return (
                 <div
                   key={s.stepNumber}
@@ -129,10 +128,17 @@ export function DashboardStats() {
                   <div className="truncate text-sm font-medium">{s.stepName}</div>
                   <div className="mt-2 flex items-center gap-2">
                     <div className="h-1.5 flex-1 rounded-full bg-muted">
-                      <div
-                        className="h-1.5 rounded-full bg-primary"
-                        style={{ width: `${pct}%` }}
-                      />
+                      {s.count > 0 ? (
+                        <div
+                          className="h-1.5 rounded-full bg-primary"
+                          style={{
+                            width: `${Math.max(
+                              4,
+                              Math.round((s.count / maxCount) * 100)
+                            )}%`,
+                          }}
+                        />
+                      ) : null}
                     </div>
                     <span className="text-xs font-semibold tabular-nums">{s.count}</span>
                   </div>

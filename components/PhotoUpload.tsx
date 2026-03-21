@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Upload, X } from "lucide-react"
 import Image from "next/image"
+import { useToast } from "@/hooks/use-toast"
 
 interface PhotoUploadProps {
   value?: string
@@ -17,6 +18,7 @@ export function PhotoUpload({ value, onChange, disabled }: PhotoUploadProps) {
   const [preview, setPreview] = useState<string | null>(value || null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { toast } = useToast()
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -49,7 +51,12 @@ export function PhotoUpload({ value, onChange, disabled }: PhotoUploadProps) {
       onChange(data.photoUrl)
     } catch (error) {
       console.error("Upload error:", error)
-      alert(error instanceof Error ? error.message : "Upload failed")
+      toast({
+        title: "Upload failed",
+        description:
+          error instanceof Error ? error.message : "Please try again.",
+        variant: "destructive",
+      })
       setPreview(null)
     } finally {
       setUploading(false)

@@ -4,15 +4,15 @@ import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { resolved, setTheme } = useTheme()
 
   const cycle = () => {
     // Only toggle between light + dark (no "system" option in the UI).
-    setTheme(theme === "dark" ? "light" : "dark")
+    setTheme(resolved === "dark" ? "light" : "dark")
   }
 
-  const label = theme === "dark" ? "Dark" : "Light"
-  const nextLabel = theme === "dark" ? "Light" : "Dark"
+  const label = resolved === "dark" ? "Dark" : "Light"
+  const nextLabel = resolved === "dark" ? "Light" : "Dark"
 
   return (
     <Button

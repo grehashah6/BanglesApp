@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Image from "next/image"
 
 type Product = {
   id: string
@@ -425,7 +426,13 @@ export default function ProductsPage() {
                       )}
                       <div className="h-12 w-12 rounded-md border bg-muted shrink-0 overflow-hidden flex items-center justify-center">
                         {p.photoUrl ? (
-                          <img src={p.photoUrl} alt={p.name} className="h-12 w-12 object-cover" />
+                          <Image
+                            src={p.photoUrl}
+                            alt={p.name}
+                            width={48}
+                            height={48}
+                            className="h-12 w-12 object-cover"
+                          />
                         ) : (
                           <span className="text-xs text-muted-foreground">—</span>
                         )}
@@ -539,11 +546,12 @@ export default function ProductsPage() {
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-md border bg-muted overflow-hidden flex items-center justify-center transition-colors group-hover:border-ring/30">
                             {p.photoUrl ? (
-                              <img
+                              <Image
                                 src={p.photoUrl}
                                 alt={p.name}
+                                width={40}
+                                height={40}
                                 className="h-10 w-10 object-cover transition-transform duration-200 group-hover:scale-[1.03]"
-                                loading="lazy"
                               />
                             ) : (
                               <span className="text-xs text-muted-foreground">

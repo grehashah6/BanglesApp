@@ -67,29 +67,39 @@ export async function GET() {
       if (eta < new Date()) overdueCount++
     }
 
+    // Pre-index history timestamps so we don't repeatedly filter the same array.
+    // historyForTime is ordered asc, so the first time we see a (productId, stepNumber)
+    // pair is treated as "entered step".
+    const stepToFirstAt = new Map<number, Map<string, Date>>()
+    for (const h of historyForTime) {
+      let byProduct = stepToFirstAt.get(h.stepNumber)
+      if (!byProduct) {
+        byProduct = new Map()
+        stepToFirstAt.set(h.stepNumber, byProduct)
+      }
+      if (!byProduct.has(h.productId)) {
+        byProduct.set(h.productId, new Date(h.updatedAt))
+      }
+    }
+
+    const msPerDay = 24 * 60 * 60 * 1000
     const stepDurations: { stepNumber: number; avgDays: number; count: number }[] = []
     for (let stepNum = 1; stepNum < TOTAL_STEPS; stepNum++) {
-      const entries = historyForTime.filter((h) => h.stepNumber === stepNum + 1)
-      if (entries.length === 0) continue
-      const productIds = new Set(entries.map((e) => e.productId))
+      const enteredAtMap = stepToFirstAt.get(stepNum)
+      const leftAtMap = stepToFirstAt.get(stepNum + 1)
+      if (!enteredAtMap || !leftAtMap) continue
+
       const times: number[] = []
-      for (const pid of productIds) {
-        const entered = historyForTime
-          .filter((e) => e.productId === pid && e.stepNumber === stepNum)
-          .pop()
-        const left = entries.find((e) => e.productId === pid)
-        if (entered && left) {
-          const days =
-            (new Date(left.updatedAt).getTime() -
-              new Date(entered.updatedAt).getTime()) /
-            (24 * 60 * 60 * 1000)
-          if (days >= 0 && days < 365) times.push(days)
-        }
+      for (const [productId, leftAt] of leftAtMap.entries()) {
+        const enteredAt = enteredAtMap.get(productId)
+        if (!enteredAt) continue
+
+        const days = (leftAt.getTime() - enteredAt.getTime()) / msPerDay
+        if (days >= 0 && days < 365) times.push(days)
       }
+
       if (times.length > 0) {
-        const avgDays =
-          times.reduce((a, b) => a + b, 0) / times.length
-        const step = steps.find((s) => s.stepNumber === stepNum)
+        const avgDays = times.reduce((a, b) => a + b, 0) / times.length
         stepDurations.push({
           stepNumber: stepNum,
           avgDays: Math.round(avgDays * 10) / 10,
