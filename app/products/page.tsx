@@ -233,8 +233,8 @@ export default function ProductsPage() {
     products.some((p) => selectedIds.has(p.id) && p.currentStep < TOTAL_STEPS)
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between gap-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
             Products
@@ -243,20 +243,21 @@ export default function ProductsPage() {
             Track each bangle from step 1 to step {TOTAL_STEPS}.
           </p>
         </div>
-        <Badge variant={isAdmin ? "default" : "secondary"}>
+        <Badge variant={isAdmin ? "default" : "secondary"} className="w-fit">
           {isAdmin ? "Admin" : "Viewer"}
         </Badge>
       </div>
 
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
+        <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Items</CardTitle>
             <CardDescription>Click an item to view details and history.</CardDescription>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="grid w-full grid-cols-1 gap-2 sm:flex sm:w-auto sm:items-center sm:gap-2 sm:flex-wrap">
             <Button
               variant="outline"
+              className="h-10 w-full sm:w-auto"
               onClick={() => loadProducts()}
             >
               Refresh
@@ -264,6 +265,7 @@ export default function ProductsPage() {
             <Button
               variant="outline"
               size="sm"
+              className="h-10 w-full sm:w-auto"
               onClick={() => {
                 const headers = ["Name", "Size", "Step", "Progress %", "Updated"]
                                 const rows = products.map((p) => [
@@ -288,6 +290,7 @@ export default function ProductsPage() {
             <Button
               variant="outline"
               size="sm"
+              className="h-10 w-full sm:w-auto"
               onClick={() => window.print()}
             >
               Print / PDF
@@ -296,14 +299,15 @@ export default function ProductsPage() {
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3">
-            <div className="grid gap-3 md:grid-cols-[1fr,220px,auto]">
+            <div className="grid gap-2 md:grid-cols-[1fr,220px,auto]">
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by name…"
+                className="h-10"
               />
               <Select value={stepFilter} onValueChange={setStepFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Filter by step" />
                 </SelectTrigger>
                 <SelectContent>
@@ -316,11 +320,14 @@ export default function ProductsPage() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button onClick={() => loadProducts({ query, step: stepFilter, archived: includeArchived })}>
+              <Button
+                className="h-10 w-full md:w-auto"
+                onClick={() => loadProducts({ query, step: stepFilter, archived: includeArchived })}
+              >
                 Apply
               </Button>
             </div>
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
@@ -351,6 +358,7 @@ export default function ProductsPage() {
                     <Button
                       size="sm"
                       variant="secondary"
+                      className="h-10 w-full sm:w-auto"
                       onClick={bulkAdvance}
                       disabled={bulkAdvancing}
                     >

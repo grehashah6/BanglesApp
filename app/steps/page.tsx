@@ -82,9 +82,9 @@ export default function StepsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight">Step durations</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Step durations</h1>
           <p className="text-sm text-muted-foreground">
             Configure typical days for each step to drive ETA.
           </p>
@@ -93,7 +93,7 @@ export default function StepsPage() {
           {saved && (
             <div className="text-sm text-muted-foreground">Saved</div>
           )}
-          <Button type="button" onClick={save} disabled={saving}>
+          <Button type="button" onClick={save} disabled={saving} className="h-10 w-full sm:w-auto">
             {saving ? "Saving..." : "Save changes"}
           </Button>
         </div>
@@ -107,7 +107,43 @@ export default function StepsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div className="space-y-3 md:hidden">
+            {steps.map((s) => (
+              <div key={s.id} className="rounded-lg border p-3">
+                <div className="text-xs text-muted-foreground">Step {s.stepNumber}</div>
+                <div className="font-medium">{s.stepName}</div>
+                {s.description && (
+                  <div className="mt-1 text-xs text-muted-foreground">{s.description}</div>
+                )}
+                <div className="mt-3">
+                  <Input
+                    type="number"
+                    className="h-10 w-full"
+                    value={
+                      s.estimatedDurationDays !== null
+                        ? s.estimatedDurationDays
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const value =
+                        e.target.value === ""
+                          ? null
+                          : Number(e.target.value)
+                      setSteps((prev) =>
+                        prev.map((p) =>
+                          p.id === s.id
+                            ? { ...p, estimatedDurationDays: value }
+                            : p
+                        )
+                      )
+                    }}
+                    placeholder="Estimated days"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr className="border-b">

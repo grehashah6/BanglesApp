@@ -230,8 +230,8 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between gap-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
             Orders
@@ -244,15 +244,15 @@ export default function OrdersPage() {
 
       {isAdmin && (
         <Card>
-          <CardHeader>
+          <CardHeader className="space-y-1 pb-4">
             <CardTitle>Create new order</CardTitle>
             <CardDescription>
               Add an order name, then add one or more products and sizes. Each size is tracked independently.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleCreate} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleCreate} className="space-y-5">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="order-name">Order name / number</Label>
                   <Input
@@ -261,6 +261,7 @@ export default function OrdersPage() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Order-123"
                     required
+                    className="h-11"
                   />
                 </div>
                 <div className="space-y-2">
@@ -270,41 +271,50 @@ export default function OrdersPage() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Any extra details…"
+                    className="h-11"
                   />
                 </div>
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label>Products and sizes</Label>
-                  <Button type="button" variant="outline" size="sm" onClick={addDesignItem}>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <Label className="text-base sm:text-sm">Products and sizes</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addDesignItem}
+                    className="h-10 w-full shrink-0 sm:w-auto"
+                  >
                     Add product
                   </Button>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {items.map((item, idx) => (
                     <div
                       key={item.id}
-                      className="rounded-lg border p-3 space-y-3"
+                      className="rounded-xl border bg-muted/20 p-4 space-y-4"
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex-1">
+                      <div className="flex flex-col gap-3">
+                        <div className="space-y-2 min-w-0">
                           <Label className="text-xs text-muted-foreground">
-                            Product
+                            Product name
                           </Label>
                           <Input
                             value={item.designName}
                             onChange={(e) => updateDesignName(item.id, e.target.value)}
-                            placeholder={idx === 0 ? "Product name (e.g. Bangle A)" : "Product name"}
+                            placeholder={idx === 0 ? "e.g. Bangle A" : "Product name"}
                             required={idx === 0}
+                            className="h-11"
                           />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                           <Button
                             type="button"
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             onClick={() => addSizeRow(item.id)}
+                            className="h-10 w-full sm:flex-1 sm:min-w-[8rem]"
                           >
                             Add size
                           </Button>
@@ -314,6 +324,7 @@ export default function OrdersPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => removeDesignItem(item.id)}
+                              className="h-10 w-full text-destructive hover:text-destructive sm:w-auto"
                             >
                               Remove product
                             </Button>
@@ -321,35 +332,49 @@ export default function OrdersPage() {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-3 border-t border-border/60 pt-3">
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Sizes (each row is one tracked item)
+                        </p>
                         {item.sizes.map((s, sIdx) => (
                           <div
                             key={s.id}
-                            className="grid gap-2 md:grid-cols-[2fr,2fr,auto]"
+                            className="flex flex-col gap-3 rounded-lg border bg-background/80 p-3 sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] sm:items-end sm:gap-3"
                           >
-                            <Input
-                              value={s.size}
-                              onChange={(e) => updateSizeValue(item.id, s.id, e.target.value)}
-                              placeholder={sIdx === 0 ? "Size (e.g. 2.8, 11)" : "Size"}
-                              required={idx === 0 && sIdx === 0}
-                            />
-                            <Input
-                              type="file"
-                              accept="image/jpeg,image/png,image/webp"
-                              onChange={(e) =>
-                                updateSizeFile(item.id, s.id, e.target.files?.[0] ?? null)
-                              }
-                            />
-                            <div className="flex items-center justify-end">
-                              {item.sizes.length > 1 && (
+                            <div className="space-y-1.5">
+                              <Label className="text-xs text-muted-foreground">Size</Label>
+                              <Input
+                                value={s.size}
+                                onChange={(e) => updateSizeValue(item.id, s.id, e.target.value)}
+                                placeholder={sIdx === 0 ? "e.g. 2.8 or 11" : "Size"}
+                                required={idx === 0 && sIdx === 0}
+                                className="h-11"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <Label className="text-xs text-muted-foreground">Photo (optional)</Label>
+                              <Input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                onChange={(e) =>
+                                  updateSizeFile(item.id, s.id, e.target.files?.[0] ?? null)
+                                }
+                                className="h-11 cursor-pointer border-input bg-background text-sm file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
+                              />
+                            </div>
+                            <div className="flex sm:pb-0.5">
+                              {item.sizes.length > 1 ? (
                                 <Button
                                   type="button"
-                                  variant="ghost"
+                                  variant="outline"
                                   size="sm"
                                   onClick={() => removeSizeRow(item.id, s.id)}
+                                  className="w-full sm:w-auto"
                                 >
-                                  Remove
+                                  Remove size
                                 </Button>
+                              ) : (
+                                <span className="hidden sm:block sm:w-[5.5rem]" aria-hidden />
                               )}
                             </div>
                           </div>
@@ -360,8 +385,13 @@ export default function OrdersPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Button type="submit" disabled={creating}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Button
+                  type="submit"
+                  disabled={creating}
+                  className="h-11 w-full sm:w-auto sm:min-w-[10rem]"
+                  size="lg"
+                >
                   {creating ? "Creating…" : "Create order"}
                 </Button>
                 {error && (
@@ -379,19 +409,26 @@ export default function OrdersPage() {
       )}
 
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <div>
+        <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <CardTitle>Orders</CardTitle>
-            <CardDescription>Click an order to view items and progress.</CardDescription>
+            <CardDescription>Tap an order to view items and progress.</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:max-w-md sm:flex-row sm:items-center">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by order name…"
-              className="w-48"
+              className="h-10 w-full sm:min-w-[12rem]"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") loadOrders()
+              }}
             />
-            <Button variant="outline" onClick={() => loadOrders()}>
+            <Button
+              variant="outline"
+              className="h-10 w-full shrink-0 sm:w-auto"
+              onClick={() => loadOrders()}
+            >
               Search
             </Button>
           </div>

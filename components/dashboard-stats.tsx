@@ -28,7 +28,7 @@ export function DashboardStats() {
 
   if (loading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i}>
             <CardHeader className="pb-2">
@@ -49,7 +49,7 @@ export function DashboardStats() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -111,26 +111,34 @@ export function DashboardStats() {
       <Card>
         <CardHeader>
           <CardTitle>Products per step</CardTitle>
-          <CardDescription>Distribution across pipeline steps</CardDescription>
+          <CardDescription>
+            Simple view of all 11 steps with current item counts.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {stats.productsPerStep.map((s) => (
-              <div key={s.stepNumber} className="flex items-center gap-3">
-                <div className="w-24 shrink-0 text-sm text-muted-foreground">
-                  Step {s.stepNumber}
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+            {stats.productsPerStep.map((s) => {
+              const pct = Math.max(8, Math.round((s.count / maxCount) * 100))
+              return (
+                <div
+                  key={s.stepNumber}
+                  className="rounded-xl border bg-card/80 p-3"
+                  title={`${s.stepName} — ${s.count} product(s)`}
+                >
+                  <div className="text-[11px] text-muted-foreground">Step {s.stepNumber}</div>
+                  <div className="truncate text-sm font-medium">{s.stepName}</div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="h-1.5 flex-1 rounded-full bg-muted">
+                      <div
+                        className="h-1.5 rounded-full bg-primary"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-semibold tabular-nums">{s.count}</span>
+                  </div>
                 </div>
-                <div className="flex-1 h-6 rounded-md bg-muted overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-md transition-all"
-                    style={{
-                      width: `${Math.max(4, (s.count / maxCount) * 100)}%`,
-                    }}
-                  />
-                </div>
-                <span className="text-sm font-medium w-8">{s.count}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </CardContent>
       </Card>

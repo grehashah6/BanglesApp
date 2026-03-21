@@ -13,9 +13,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
           Signed in as <span className="font-medium">{session.user.email}</span>
         </p>
@@ -23,8 +23,8 @@ export default async function DashboardPage() {
 
       <DashboardStats />
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Card className="border-primary/10">
           <CardHeader>
             <CardTitle>Orders</CardTitle>
             <CardDescription>
@@ -32,7 +32,7 @@ export default async function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild>
+            <Button asChild className="h-11 w-full sm:w-auto">
               <Link href="/orders">View orders</Link>
             </Button>
           </CardContent>
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="h-11 w-full sm:w-auto">
               <Link href="/steps">Configure steps</Link>
             </Button>
           </CardContent>

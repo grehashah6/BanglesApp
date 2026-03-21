@@ -166,8 +166,8 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
             User management
@@ -176,7 +176,7 @@ export default function UsersPage() {
             Create, edit, and manage user accounts and roles.
           </p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}>Add user</Button>
+        <Button onClick={() => setCreateOpen(true)} className="h-10 w-full sm:w-auto">Add user</Button>
       </div>
 
       {error && (

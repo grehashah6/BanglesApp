@@ -67,7 +67,7 @@ export default function ActivityPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
         <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Activity log
@@ -119,6 +119,7 @@ export default function ActivityPage() {
             <div className="mt-4">
               <Button
                 variant="outline"
+                className="h-10 w-full sm:w-auto"
                 onClick={() => load(nextCursor)}
                 disabled={loadingMore}
               >

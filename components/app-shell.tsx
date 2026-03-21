@@ -67,10 +67,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="font-semibold tracking-tight">
+      <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-6">
+            <Link href="/dashboard" className="shrink-0 font-semibold tracking-tight">
               BangleTracker
             </Link>
             <nav className="hidden sm:flex items-center gap-4">
@@ -83,11 +83,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="sm:hidden"
+              className="h-9 px-3 sm:hidden"
               onClick={() => setMobileOpen(true)}
             >
               Menu
@@ -101,6 +101,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Button
               variant="outline"
               size="sm"
+              className="h-9 px-3"
               onClick={() => signOut({ callbackUrl: "/login" })}
             >
               Sign out
@@ -109,7 +110,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-8">{children}</main>
 
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
         <DialogContent className="sm:hidden">
@@ -119,21 +120,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="grid gap-2">
             <Link
               href="/dashboard"
-              className="rounded-md border px-3 py-2 text-sm"
+              className="rounded-md border px-3 py-2.5 text-sm"
               onClick={() => setMobileOpen(false)}
             >
               Dashboard
             </Link>
             <Link
               href="/orders"
-              className="rounded-md border px-3 py-2 text-sm"
+              className="rounded-md border px-3 py-2.5 text-sm"
               onClick={() => setMobileOpen(false)}
             >
               Orders
             </Link>
             <Link
               href="/products"
-              className="rounded-md border px-3 py-2 text-sm"
+              className="rounded-md border px-3 py-2.5 text-sm"
               onClick={() => setMobileOpen(false)}
             >
               Products
@@ -142,21 +143,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <>
                 <Link
                   href="/steps"
-                  className="rounded-md border px-3 py-2 text-sm"
+                  className="rounded-md border px-3 py-2.5 text-sm"
                   onClick={() => setMobileOpen(false)}
                 >
                   Steps
                 </Link>
                 <Link
                   href="/users"
-                  className="rounded-md border px-3 py-2 text-sm"
+                  className="rounded-md border px-3 py-2.5 text-sm"
                   onClick={() => setMobileOpen(false)}
                 >
                   Users
                 </Link>
                 <Link
                   href="/activity"
-                  className="rounded-md border px-3 py-2 text-sm"
+                  className="rounded-md border px-3 py-2.5 text-sm"
                   onClick={() => setMobileOpen(false)}
                 >
                   Activity
@@ -165,6 +166,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             )}
             <Button
               variant="outline"
+              className="h-10"
               onClick={() => signOut({ callbackUrl: "/login" })}
             >
               Sign out

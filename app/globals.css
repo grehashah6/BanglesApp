@@ -109,6 +109,13 @@ body::before {
   opacity: 0.25;
 }
 
+@media (max-width: 640px) {
+  body::before {
+    background-size: 88px 88px;
+    opacity: 0.12;
+  }
+}
+
 /* Make card/table hover shadows look nicer */
 @media (prefers-reduced-motion: no-preference) {
   * {
