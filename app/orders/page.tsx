@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PhotoFilePicker } from "@/components/photo-file-picker"
 
 type OrderSummary = {
   id: string
@@ -353,13 +354,11 @@ export default function OrdersPage() {
                             </div>
                             <div className="space-y-1.5">
                               <Label className="text-xs text-muted-foreground">Photo (optional)</Label>
-                              <Input
-                                type="file"
+                              <PhotoFilePicker
+                                file={s.file}
                                 accept="image/jpeg,image/png,image/webp"
-                                onChange={(e) =>
-                                  updateSizeFile(item.id, s.id, e.target.files?.[0] ?? null)
-                                }
-                                className="h-11 cursor-pointer border-input bg-background text-sm file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-secondary-foreground hover:file:bg-secondary/80"
+                                onFileChange={(picked) => updateSizeFile(item.id, s.id, picked)}
+                                disabled={creating}
                               />
                             </div>
                             <div className="flex sm:pb-0.5">
