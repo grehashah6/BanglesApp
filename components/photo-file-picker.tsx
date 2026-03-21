@@ -26,7 +26,7 @@ export function PhotoFilePicker({
   }
 
   return (
-    <div className="flex min-h-10 w-full items-center gap-3 rounded-md border bg-background px-3 py-2">
+    <div className="flex h-11 w-full items-center gap-3 rounded-md border border-input bg-background px-3 text-sm">
       <input
         ref={inputRef}
         type="file"
@@ -47,12 +47,12 @@ export function PhotoFilePicker({
         variant="secondary"
         onClick={openPicker}
         disabled={disabled}
-        className="shrink-0"
+        className="h-10 shrink-0 px-3"
       >
         Choose File
       </Button>
 
-      <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+      <span className="min-w-0 flex-1 truncate leading-none text-sm text-muted-foreground">
         {file?.name ?? placeholder}
       </span>
     </div>
