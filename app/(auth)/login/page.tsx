@@ -48,7 +48,7 @@ function LoginForm() {
     <div className="min-h-screen bg-background grid place-items-center px-4">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">BangleTracker</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">BangleFlow</h1>
           <p className="text-sm text-muted-foreground">
             Sign in to manage and track manufacturing steps.
           </p>

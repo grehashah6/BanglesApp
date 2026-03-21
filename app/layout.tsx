@@ -9,7 +9,7 @@ import { AppShell } from "@/components/app-shell"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Bangle Tracking App",
+  title: "BangleFlow",
   description: "Track bangle products through manufacturing steps",
   manifest: "/manifest.json",
 }

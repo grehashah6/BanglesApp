@@ -1,8 +1,8 @@
 {
-  "name": "BangleTracker",
-  "short_name": "BangleTracker",
-  "description": "Track bangle products through manufacturing steps",
-  "start_url": "/dashboard",
+  "name": "BangleFlow",
+  "short_name": "BangleFlow",
+  "description": "Track bangle manufacturing steps with orders, photos, and ETA.",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#2563eb",
