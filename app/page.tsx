@@ -32,12 +32,7 @@ export default function HomePage() {
       <div className="relative mx-auto max-w-6xl px-4 py-10 sm:py-14">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="inline-flex items-center gap-2 rounded-full border bg-card/60 px-3 py-1 text-xs text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-              Mobile-first manufacturing tracker
-            </div>
-
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">BangleFlow</h1>
+            <h1 className="mt-1 text-4xl font-semibold tracking-tight sm:text-5xl">BangleFlow</h1>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Create orders, track each bangle through 11 steps, and keep ETA visible.
             </p>
